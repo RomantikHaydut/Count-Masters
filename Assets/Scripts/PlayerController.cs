@@ -63,9 +63,9 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-               // CheckEnemiesLive();
+                // CheckEnemiesLive();
             }
-            CheckZBound();
+            //CheckZBound();
         }
         else
         {
@@ -75,12 +75,6 @@ public class PlayerController : MonoBehaviour
                 GameManager.Instance.isGameStarted = true;
                 rush = true;
             }
-        }
-
-
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            StartCoroutine(Finish());
         }
 
     }
@@ -105,7 +99,23 @@ public class PlayerController : MonoBehaviour
         //Horizontal Movement keyboard.
         if (!mouseMovement)
         {
+
             float horizontalInput = Input.GetAxis("Horizontal");
+            bool goingRight = (horizontalInput > 0) ? true : false;
+            if (goingRight)
+            {
+                bool canGoRight = (transform.position.x + DistanceFromFarRunner() < boundryX) ? true : false;
+                if (!canGoRight)
+                    horizontalInput = 0;
+            }
+            else
+            {
+                bool canGoLeft = (transform.position.x - DistanceFromFarRunner() > -boundryX) ? true : false;
+                if (!canGoLeft)
+                    horizontalInput = 0;
+            }
+            
+
             transform.position += transform.right * Time.deltaTime * horizontalInput * horizontalSpeed;
         }
         //Horizontal Movement mouse.
@@ -166,12 +176,19 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
+    private float DistanceFromFarRunner()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(new Vector3(transform.position.x, 3f, minZBound - 1f), new Vector3(transform.position.x, -2f, minZBound - 0.5f));
-        Gizmos.DrawLine(new Vector3(transform.position.x, 3f, maxZBound + 1f), new Vector3(transform.position.x, -2f, maxZBound + 0.5f));
+        float maxDistance = 0;
+        for (int i = 0; i < activePlayerlist.Count; i++)
+        {
+            float newDistance = Mathf.Abs(transform.position.z - activePlayerlist[i].transform.position.z);
+            if (newDistance > maxDistance)
+                maxDistance = newDistance;
+        }
+
+        return maxDistance;
     }
+
 
     // Clone
 
@@ -302,10 +319,10 @@ public class PlayerController : MonoBehaviour
 
         List<GameObject> activeRunnerCloneList = new List<GameObject>();
 
-        for (int i= 0; i < activePlayerlist.Count; i++)
+        for (int i = 0; i < activePlayerlist.Count; i++)
             activeRunnerCloneList.Add(activePlayerlist[i]);
 
-        
+
         float offsetX = -layerCount * playerRadius * 2;
         for (int i = layerCount; i >= 1; i--) // Split triangle
         {
@@ -321,7 +338,7 @@ public class PlayerController : MonoBehaviour
         offsetX = (-layerCount * playerRadius * 2);
         for (int i = 0; i < runnerCount; i++) // Split Leftovers
         {
-            Vector3 targetPos = new Vector3(offsetX, playerHeight *  i, 0);
+            Vector3 targetPos = new Vector3(offsetX, playerHeight * i, 0);
             StartCoroutine(FinishMovement(activeRunnerCloneList[0], targetPos));
             activeRunnerCloneList.Remove(activeRunnerCloneList[0]);
             offsetX += playerRadius;
@@ -333,7 +350,7 @@ public class PlayerController : MonoBehaviour
     {
         float timer = 0;
         float speed = 1f;
-        Vector3 startPos = runner.transform.position ;
+        Vector3 startPos = runner.transform.position;
         while (true)
         {
             if (timer >= 1)
@@ -345,7 +362,7 @@ public class PlayerController : MonoBehaviour
             }
 
             yield return null;
-            runner.transform.position = Vector3.Lerp(startPos, new Vector3(targetPos.x + transform.position.x,targetPos.y,transform.position.z) , timer);
+            runner.transform.position = Vector3.Lerp(startPos, new Vector3(targetPos.x + transform.position.x, targetPos.y, transform.position.z), timer);
             timer += Time.deltaTime * speed;
         }
     }

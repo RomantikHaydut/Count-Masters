@@ -57,7 +57,7 @@ public class CameraController : MonoBehaviour
     private IEnumerator Rotate_Coroutine2()
     {
         Vector3 startOffset = player.position - transform.position;
-        Vector3 targetOffset = new Vector3(-startOffset.z, startOffset.y, 0);
+        Vector3 targetOffset = new Vector3(-startOffset.z, startOffset.y, startOffset.z/2);
         Vector3 startEulerAngles = transform.eulerAngles;
         Vector3 targetEulerAngles = transform.eulerAngles;
 
@@ -68,7 +68,11 @@ public class CameraController : MonoBehaviour
             yield return new WaitForEndOfFrame();
 
             if (timer >= 1)
+            {
+                offset = targetOffset;
                 yield break;
+
+            }
 
             offset = Vector3.Lerp(startOffset, targetOffset, timer);
             transform.LookAt(player);

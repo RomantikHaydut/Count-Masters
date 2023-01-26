@@ -70,7 +70,7 @@ public class Options : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Stickman"))
+        if (other.gameObject.CompareTag("Player"))
         {
             if (FindObjectOfType<PlayerController>().transform.position.x < transform.position.x)
             {
