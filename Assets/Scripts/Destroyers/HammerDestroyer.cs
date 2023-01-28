@@ -26,7 +26,7 @@ public class HammerDestroyer : DestroyerBase
 
     private bool IsPlayerClose()
     {
-        float distance = Mathf.Abs(playerController.gameObject.transform.position.z - transform.position.z);
+        float distance = Mathf.Abs(playerMagnet.gameObject.transform.position.z - transform.position.z);
         if (distance < speedStartDistance)
             return true;
         else

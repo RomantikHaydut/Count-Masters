@@ -59,7 +59,7 @@ public class Options : MonoBehaviour
         }
         else if (divide)
         {
-            text.text = "/" + value;
+            text.text = "-%" + (100 - (100 / value));
         }
         else if (multiplier)
         {
@@ -72,7 +72,7 @@ public class Options : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            if (FindObjectOfType<PlayerController>().transform.position.x < transform.position.x)
+            if (FindObjectOfType<PlayerMagnet>().transform.position.x < transform.position.x)
             {
                 optionController1.MyFunction();
             }
@@ -81,22 +81,7 @@ public class Options : MonoBehaviour
                 optionController2.MyFunction();
             }
             gameObject.SetActive(false);
-            //Component[] options = transform.parent.gameObject.GetComponentsInChildren(typeof(OptionController));
-            //foreach (OptionController option in options)
-            //{
-            //    if (option != this)
-            //    {
-            //        option.enabled = false;
-            //    }
-            //}
-
-            //transform.parent.GetComponent<Options>().optionController1.enabled = false;
-            //transform.parent.GetComponent<Options>().optionController2.enabled = false;
-            //gameObject.SetActive(false);
 
         }
     }
-
-
-
 }

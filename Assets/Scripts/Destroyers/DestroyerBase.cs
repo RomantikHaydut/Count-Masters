@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class DestroyerBase : MonoBehaviour
 {
-    protected PlayerController playerController;
+    protected PlayerMagnet playerMagnet;
     private void Awake()
     {
-        playerController = FindObjectOfType<PlayerController>();
+        playerMagnet = FindObjectOfType<PlayerMagnet>();
     }
 
     public void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Stickman"))
         {
-            playerController.DestroyRunner(other.gameObject);
+            playerMagnet.DestroyRunner(other.gameObject);
         }
     }
 }

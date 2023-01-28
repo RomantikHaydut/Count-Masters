@@ -15,45 +15,23 @@ public class OptionController : MonoBehaviour
 
     public void MyFunction()
     {
-        PlayerController playerController = FindObjectOfType<PlayerController>();
+        PlayerMagnet playerMagnet = FindObjectOfType<PlayerMagnet>();
         if (sum)
         {
-            playerController.CreateRunner2(myValue);
+            playerMagnet.CreateRunner(myValue);
         }
         else if (multiplier)
         {
-            playerController.CreateRunner2(myValue * playerController.activePlayerlist.Count);
+            playerMagnet.CreateRunner((myValue * playerMagnet.activePlayerlist.Count) - playerMagnet.activePlayerlist.Count);
         }
         else if (minus)
         {
-            playerController.DestroyRunners(myValue);
+            playerMagnet.DestroyRunners(myValue);
         }
         else if (divide)
         {
-            playerController.DestroyRunners(playerController.activePlayerlist.Count - (playerController.activePlayerlist.Count / myValue));
+            playerMagnet.DestroyRunners(playerMagnet.activePlayerlist.Count - (playerMagnet.activePlayerlist.Count / myValue));
         }
        
-    }
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    if (other.gameObject.CompareTag("Stickman"))
-    //    {
-    //        MyFunction();
-    //        //Component[] options = transform.parent.gameObject.GetComponentsInChildren(typeof(OptionController));
-    //        //foreach (OptionController option in options)
-    //        //{
-    //        //    if (option != this)
-    //        //    {
-    //        //        option.enabled = false;
-    //        //    }
-    //        //}
-
-    //        transform.parent.GetComponent<Options>().optionController1.enabled = false;
-    //        transform.parent.GetComponent<Options>().optionController2.enabled = false;
-    //        gameObject.SetActive(false);
-
-    //    }
-    //}
-
-  
+    } 
 }

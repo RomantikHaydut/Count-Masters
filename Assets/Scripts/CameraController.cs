@@ -4,62 +4,40 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    public float followSpeed = 1f;
-    private Transform player;
+    [SerializeField] private float followSpeed = 1f;
+
+    private Transform target;
 
     [SerializeField] private Vector3 offset;
 
-    [SerializeField] private float finishAngle = 65f;
+
     private void Awake()
     {
-        player = GameObject.FindGameObjectWithTag("FocalPoint").transform;
-        offset = player.position - transform.position;
+        target = GameObject.FindGameObjectWithTag("FocalPoint").transform;
+        offset = target.position - transform.position;
     }
 
     void LateUpdate()
     {
         FollowTarget();
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            Rotate();
-        }
-
     }
 
     private void FollowTarget()
     {
-        transform.position = Vector3.Lerp(transform.position, player.position - offset, Time.deltaTime * followSpeed);
+        transform.position = Vector3.Lerp(transform.position, target.position - offset, Time.deltaTime * followSpeed);
     }
+
+    public void ChangeTarget(Transform newTarget) => target = newTarget;
 
     public void Rotate()
     {
-        StartCoroutine(Rotate_Coroutine2());
+        StartCoroutine(Rotate_Coroutine());
     }
-
 
     private IEnumerator Rotate_Coroutine()
     {
-        float timer = 0;
-        float rotateSpeed = 1f;
-        while (true)
-        {
-            yield return new WaitForEndOfFrame();
-
-            if (timer >= 1)
-                yield break;
-
-            transform.RotateAround(player.transform.position, Vector3.up, -finishAngle * Time.deltaTime);
-            offset = player.position - transform.position;
-            timer += Time.deltaTime * rotateSpeed;
-        }
-    } 
-
-    private IEnumerator Rotate_Coroutine2()
-    {
-        Vector3 startOffset = player.position - transform.position;
-        Vector3 targetOffset = new Vector3(-startOffset.z, startOffset.y, startOffset.z/2);
-        Vector3 startEulerAngles = transform.eulerAngles;
-        Vector3 targetEulerAngles = transform.eulerAngles;
+        Vector3 startOffset = target.position - transform.position;
+        Vector3 targetOffset = new Vector3(-startOffset.z * 1.3f, startOffset.y / 1.3f, startOffset.z / 1.5f);
 
         float timer = 0;
         float rotateSpeed = 1f;
@@ -75,7 +53,7 @@ public class CameraController : MonoBehaviour
             }
 
             offset = Vector3.Lerp(startOffset, targetOffset, timer);
-            transform.LookAt(player);
+            transform.LookAt(target);
             timer += Time.deltaTime * rotateSpeed;
         }
     }

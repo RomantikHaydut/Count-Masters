@@ -4,12 +4,23 @@ using UnityEngine;
 
 public class FinishStair : MonoBehaviour
 {
+    public int myScoreFactor;
+
     private GameObject focalPoint;
-    private PlayerController playerController;
-   private void Awake()
+
+    private PlayerMagnet playerMagnet;
+
+    private UIManager uiManager;
+    private void Awake()
     {
-        playerController = FindObjectOfType<PlayerController>();
+        playerMagnet = FindObjectOfType<PlayerMagnet>();
+        uiManager = FindObjectOfType<UIManager>();
         focalPoint = GameObject.FindGameObjectWithTag("FocalPoint");
+    }
+
+    private void Start()
+    {
+        uiManager.DisplayText(gameObject, myScoreFactor.ToString() + "X");
         RandomColor();
     }
 
@@ -19,11 +30,12 @@ public class FinishStair : MonoBehaviour
         {
             focalPoint.transform.position = new Vector3(focalPoint.transform.position.x, transform.position.y, focalPoint.transform.position.z);
             other.gameObject.transform.parent = null;
-            //other.gameObject.transform.position = transform.position;
-            playerController.finishedPlayerlist.Add(other.gameObject);
-            if (playerController.finishedPlayerlist.Count >= playerController.activePlayerlist.Count)
+            playerMagnet.finishedPlayerlist.Add(other.gameObject);
+
+            if (playerMagnet.finishedPlayerlist.Count >= playerMagnet.activePlayerlist.Count) // Last runner triggered / Finish Game.
             {
-                Camera.main.GetComponent<CameraController>().enabled = false;
+                ScoreManager.Instance.CalculateScore(myScoreFactor);
+                GameManager.Instance.WinGame();
             }
         }
     }
